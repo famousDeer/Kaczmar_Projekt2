@@ -1,6 +1,20 @@
 import soundfile as sf
 import numpy as np
 import matplotlib.pyplot as plt
+from math import cos, pi
+#  ========== FUNCTIONS ========== 
+# Weight for flattening edges
+def weight(i: int):
+    return 0.5*(1-cos(((2*pi) / (257)) * i))
+
+# Check if last 10 smaples from previous segment
+# fir first 10 samples from current segment
+def check_samples(segments: np.ndarray):
+    for i in range(1,len(segments)):
+        if list(segments[i-1][-10:]) != list(segments[i][:10]):
+            print('\033[91m' + "X Test 1 Failed")
+            print(f"List #{i-1} is diff with list #{i}")
+    print('\033[92m' + f"\u2713 Test Passed")
 
 # Read wave file
 track, fs = sf.read("data/01.wav")
@@ -28,23 +42,17 @@ if last_seg_len > 0:
 
 # Check if last 10 samples from previus segment
 # fit first 10 samples from current segment
-for i in range(1,len(segments_clear)):
-    if any(segments_clear[i-1]) != any(segments_clear[i]):
-        print('\033[91m' + "X Test 1 Failed")
-        print(f"List #{i-1} is diff with list #{i}")
-print('\033[92m' + "\u2713 Test 1 Passed")
+check_samples(segments_clear)
 
 # Create segments model with zeros 
 segments_model = []
 
 for idx, lst in enumerate(segments_clear):
+    lst[0] = weight(1)
+    lst[-1] = weight(256)
     segments_model.append(np.zeros(10))
     segments_model[idx] = np.append(segments_model[idx], lst)
     segments_model[idx] = np.append(segments_model[idx], np.zeros(10))
 
 # Check if zeros added to segments
-for i in range(1,len(segments_model)):
-    if any(segments_model[i-1]) != any(segments_model[i]):
-        print('\033[91m' + "X Test 1 Failed")
-        print(f"List #{i-1} is diff with list #{i}")
-print('\033[92m' + "\u2713 Test 2 Passed")
+check_samples(segments_model)
