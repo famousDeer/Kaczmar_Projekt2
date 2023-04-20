@@ -2,6 +2,8 @@ import soundfile as sf
 import numpy as np
 import matplotlib.pyplot as plt
 from math import cos, pi
+from statsmodels.tsa.ar_model import AutoReg
+
 #  ========== FUNCTIONS ========== 
 # Weight for flattening edges
 def weight(i: int):
@@ -15,6 +17,11 @@ def check_samples(segments: np.ndarray):
             print('\033[91m' + "X Test 1 Failed")
             print(f"List #{i-1} is diff with list #{i}")
     print('\033[92m' + f"\u2713 Test Passed")
+
+def AR(rank: int, data):
+    """Auto-regressive model rank n-th"""
+    for i in range(rank, len(data) - rank):
+        pass
 
 # Read wave file
 track, fs = sf.read("data/01.wav")
@@ -54,5 +61,9 @@ for idx, lst in enumerate(segments_clear):
     segments_model[idx] = np.append(segments_model[idx], lst)
     segments_model[idx] = np.append(segments_model[idx], np.zeros(10))
 
+
 # Check if zeros added to segments
 check_samples(segments_model)
+
+ar = AutoReg(endog=segments_model[0], lags=10).fit()
+print(ar.summary())
