@@ -1,8 +1,12 @@
 import soundfile as sf
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import linalg
 from math import cos, pi
 from sklearn.linear_model import LinearRegression
+from statsmodels.tsa.stattools import levinson_durbin
+from Levinson_Durbin import levinson 
+import IPython
 
 
 #  ========== FUNCTIONS ========== 
@@ -19,68 +23,21 @@ def check_samples(segments: np.ndarray):
             print(f"List #{i-1} is diff with list #{i}")
     print('\033[92m' + f"\u2713 Test Passed")
 
-class AR:
-  def __init__(self, order):
-    self.order = order
-    self.model = LinearRegression()
-    self.sigma = None
-
-  def generate_train_x(self, X):
-    n = len(X)
-    ans = X[:n-self.order]
-    ans = np.reshape(ans, (-1, 1))
-    for k in range(1, self.order):
-      temp = X[k:n-self.order+k]
-      temp = np.reshape(temp, (-1, 1))
-      ans = np.hstack((ans, temp))
-    return ans
-  
-  def generate_train_y(self, X):
-    return X[self.order:]
-
-  def fit(self, X):
-    self.sigma = np.std(X)
-    train_x = self.generate_train_x(X)
-    train_y = self.generate_train_y(X)
-    self.model.fit(train_x, train_y)
-
-  def predict(self, X, num_predictions, mc_depth):
-    X = np.array(X)
-    ans = np.array([])
-
-    for j in range(mc_depth):
-      ans_temp = []
-      a = X[-self.order:]
-
-      for i in range(num_predictions):
-        next = self.model.predict(np.reshape(a, (1, -1))) + np.random.normal(loc=0, scale=self.sigma)
-
-        ans_temp.append(next)
-        
-        a = np.roll(a, -1)
-        a[-1] = next
-      
-      if j==0:
-        ans = np.array(ans_temp)
-      
-      else:
-        ans += np.array(ans_temp)
-    
-    ans /= mc_depth
-
-    return ans
-
+def play_sound(sound, rate=11025):
+    return  IPython.display.display(IPython.display.Audio(sound, rate=rate))
 # Read wave file
 track, fs = sf.read("data/01.wav")
 
+play_sound(track[:256])
+
 # Ploting track with specgram
-# plt.figure(figsize=(12,6))
+plt.figure(figsize=(12,6))
 
-# plt.subplot(2, 1, 1)
-# plt.plot(track)
+plt.subplot(2, 1, 1)
+plt.plot(track)
 
-# plt.subplot(2, 1, 2)
-# plt.specgram(track, NFFT=1024, Fs=fs)
+plt.subplot(2, 1, 2)
+plt.specgram(track, NFFT=1024, Fs=fs)
 
 # plt.show()
 
@@ -112,12 +69,6 @@ for idx, lst in enumerate(segments_clear):
 # Check if zeros added to segments
 check_samples(segments_model)
 
-model = AR(10)
-model.fit(segments_model[0])
-prediction = model.predict(segments_model[0][:10], 100, 1)
-prediction = np.reshape(prediction, (-1,))
-prediction = np.hstack((segments_model[0][:10], prediction))
+sigma_v, arcoefs, pacf, sigma, phi = levinson_durbin(segments_model[0],10)
 
-plt.figure(figsize=(24, 16))
-plt.plot(track[256:366] - prediction)
-plt.show()
+print(arcoefs)
