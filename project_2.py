@@ -2,7 +2,7 @@ import soundfile as sf
 import numpy as np
 import matplotlib.pyplot as plt
 from math import cos, pi
-from statsmodels.tsa.ar_model import AutoReg
+
 
 #  ========== FUNCTIONS ========== 
 # Weight for flattening edges
@@ -20,6 +20,10 @@ def check_samples(segments: np.ndarray):
 
 def AR(rank: int, data):
     """Auto-regressive model rank n-th"""
+    if isinstance(data, list) and not isinstance(data[0], np.ndarray):
+        print("Is list")
+    else:
+        print("Is numpy.ndarray")
     for i in range(rank, len(data) - rank):
         pass
 
@@ -65,5 +69,4 @@ for idx, lst in enumerate(segments_clear):
 # Check if zeros added to segments
 check_samples(segments_model)
 
-ar = AutoReg(endog=segments_model[0], lags=10).fit()
-print(ar.summary())
+AR(2, segments_model)
