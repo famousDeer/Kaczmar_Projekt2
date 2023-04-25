@@ -5,7 +5,7 @@ from scipy import linalg
 from math import cos, pi
 from sklearn.linear_model import LinearRegression
 from statsmodels.tsa.stattools import levinson_durbin
-from Levinson_Durbin import levinson 
+from Levinson_Durbin.levinson import levinson_1d
 import IPython
 
 
@@ -70,5 +70,6 @@ for idx, lst in enumerate(segments_clear):
 check_samples(segments_model)
 
 sigma_v, arcoefs, pacf, sigma, phi = levinson_durbin(segments_model[0],10)
-
+arcoefs2, errors, reflection_coef = levinson_1d(segments_model[0],10)
 print(arcoefs)
+print(arcoefs2)
