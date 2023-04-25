@@ -119,5 +119,5 @@ prediction = np.reshape(prediction, (-1,))
 prediction = np.hstack((segments_model[0][:10], prediction))
 
 plt.figure(figsize=(24, 16))
-plt.plot(track[256:357] - prediction)
+plt.plot(track[256:366] - prediction)
 plt.show()
