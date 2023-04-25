@@ -77,7 +77,7 @@ track, fs = sf.read("data/01.wav")
 plt.figure(figsize=(12,6))
 
 plt.subplot(2, 1, 1)
-plt.plot(track)
+plt.plot(track[:356])
 
 plt.subplot(2, 1, 2)
 plt.specgram(track, NFFT=1024, Fs=fs)
