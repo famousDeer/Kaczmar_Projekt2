@@ -74,13 +74,13 @@ class AR:
 track, fs = sf.read("data/01.wav")
 
 # Ploting track with specgram
-plt.figure(figsize=(12,6))
+# plt.figure(figsize=(12,6))
 
-plt.subplot(2, 1, 1)
-plt.plot(track[:356])
+# plt.subplot(2, 1, 1)
+# plt.plot(track)
 
-plt.subplot(2, 1, 2)
-plt.specgram(track, NFFT=1024, Fs=fs)
+# plt.subplot(2, 1, 2)
+# plt.specgram(track, NFFT=1024, Fs=fs)
 
 # plt.show()
 
@@ -119,5 +119,5 @@ prediction = np.reshape(prediction, (-1,))
 prediction = np.hstack((segments_model[0][:10], prediction))
 
 plt.figure(figsize=(24, 16))
-plt.plot(prediction)
+plt.plot(track[256:357] - prediction)
 plt.show()
