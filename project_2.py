@@ -6,8 +6,8 @@ from math import cos, pi
 from sklearn.linear_model import LinearRegression
 from statsmodels.tsa.stattools import levinson_durbin
 from Levinson_Durbin.levinson import levinson_1d
+from Levinson_Durbin.levinson import rlevinson
 import IPython
-
 
 #  ========== FUNCTIONS ========== 
 # Weight for flattening edges
@@ -61,13 +61,9 @@ segments_model = []
 for idx, lst in enumerate(segments_clear):
     lst[0] = weight(1)
     lst[-1] = weight(256)
-    segments_model.append(np.zeros(10))
+    segments_model.append(np.random.normal(0,1,10))
     segments_model[idx] = np.append(segments_model[idx], lst)
-    segments_model[idx] = np.append(segments_model[idx], np.zeros(10))
-
-
-# Check if zeros added to segments
-check_samples(segments_model)
+    segments_model[idx] = np.append(segments_model[idx], np.random.normal(0,1,10))
 
 sigma_v, arcoefs, pacf, sigma, phi = levinson_durbin(segments_model[0],10)
 arcoefs2, errors, reflection_coef = levinson_1d(segments_model[0],10)
