@@ -6,7 +6,6 @@ from math import cos, pi
 from sklearn.linear_model import LinearRegression
 from statsmodels.tsa.stattools import levinson_durbin
 from Levinson_Durbin.levinson import levinson_1d
-from Levinson_Durbin.levinson import rlevinson
 import IPython
 
 #  ========== FUNCTIONS ========== 
