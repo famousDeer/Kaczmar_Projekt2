@@ -16,7 +16,7 @@ def nad(N, r):
 
     segment_id = 0
     weight_function = 0.5 * (1 - np.cos(2*np.pi*k/(N+1)))
-    wwight_function = np.roll(weight_function, -1)
+    weight_function = np.roll(weight_function, -1)
     e_g = np.zeros((len(input_arr) // N) * N + 1)
     e_max_g = np.zeros(len(input_arr) // N)
     a_g = np.zeros((len(input_arr) // N + 1) * r)
