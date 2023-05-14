@@ -1,0 +1,9 @@
+przemnozone segmenty tylko do wyznaczenia a1 do a10
+
+bledy predykcji na oryginalnym sygnale (bo jak bierzemy te segmenty, to co jakis czas dostajemy 0)
+
+y[t] = 0,6[y-1] + 0,05t[y-2] - 0,2y[t-3] + n[t]
+
+wspolczynniki odbicia nie zmieniaja sie z rzedem - wnosza dodatkowa informacje (są takie same np dla 5rzedu i 7 rzedu)
+
+można zrobić identyfikację bez zakładek
