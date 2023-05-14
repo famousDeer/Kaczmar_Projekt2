@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.io.wavfile import read, write
-from levinson_2 import levinson_2
+from levinson import levinson
 from kodowanie import koduj, dekoduj, czytaj_plik, zapisz_plik
 import matplotlib.pyplot as plt
 
@@ -38,7 +38,7 @@ def nad(samples_ammount, ar_rank):
         lg = np.arange(-255, 256)
         r2 = r2[lg >= 0]
         # a = ld(r2, 10)[1:]
-        track = levinson_2(yr, samples_ammount, 10)
+        track = levinson(yr, samples_ammount, 10)
         if segment_id == 1:
             y = np.concatenate((np.zeros(ar_rank), y))
         else:
