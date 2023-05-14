@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def nad(N, r):
-    a = read("/home/kaszo5/Documents/Studia/Kaczmar 2/Kaczmar_Projekt2/data/01.wav")
+    a = read("/data/01.wav")
     input_arr = np.array(a[1], dtype=float)
     input_arr = 0.5 * input_arr / 32768
     input_arr = np.array(input_arr)
@@ -15,8 +15,8 @@ def nad(N, r):
     k = np.arange(N)
 
     segment_id = 0
-    w = 0.5 * (1 - np.cos(2*np.pi*k/(N+1)))
-    w = np.roll(w, -1)
+    weight_function = 0.5 * (1 - np.cos(2*np.pi*k/(N+1)))
+    wwight_function = np.roll(weight_function, -1)
     e_g = np.zeros((len(input_arr) // N) * N + 1)
     e_max_g = np.zeros(len(input_arr) // N)
     a_g = np.zeros((len(input_arr) // N + 1) * r)
@@ -26,7 +26,7 @@ def nad(N, r):
         segment_id += 1
 
         y = input_arr[t]
-        yw = y * w
+        yw = y * weight_function
         yr = np.concatenate((np.zeros(r), yw, np.zeros(r)), axis=0)
 
         e = np.zeros(N)
