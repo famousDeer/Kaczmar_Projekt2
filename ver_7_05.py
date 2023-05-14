@@ -6,28 +6,30 @@ import matplotlib.pyplot as plt
 
 
 def nad(samples_ammount, ar_rank):
-    track = read("/data/01.wav")
+    track = read("/home/kaszo5/Documents/Studia/Kaczmar 2/Kaczmar_Projekt2/data/01.wav")
     input_arr = np.array(track[1], dtype=float)
+    print(f"Input array = {input_arr}")
     input_arr = 0.5 * input_arr / 32768
     input_arr = np.array(input_arr)
+    print(f"Len of input array {len(input_arr)}")
 
     t = np.arange(samples_ammount)
-    k = np.arange(samples_ammount)
 
-    segment_id = 0
-    weight_function = 0.5 * (1 - np.cos(2*np.pi*k/(samples_ammount+1)))
+    for k in range(0, samples_ammount):
+        weight_function = 0.5 * (1 - np.cos(2*np.pi*k/(samples_ammount+1)))
     weight_function = np.roll(weight_function, -1)
     e_g = np.zeros((len(input_arr) // samples_ammount) * samples_ammount + 1)
     e_max_g = np.zeros(len(input_arr) // samples_ammount)
     a_g = np.zeros((len(input_arr) // samples_ammount + 1) * ar_rank)
     print(len(e_g), len(e_max_g), len(a_g))
 
+    segment_id = 0
     while t[-1] < len(input_arr):
         segment_id += 1
 
         y = input_arr[t]
         yw = y * weight_function
-        yr = np.concatenate((np.zeros(ar_rank), yw, np.zeros(ar_rank)), axis=0)
+        yr = np.concatenate((np.zeros(ar_rank), yw, np.zeros(ar_rank)))
 
         e = np.zeros(samples_ammount)
 
@@ -38,9 +40,9 @@ def nad(samples_ammount, ar_rank):
         # a = ld(r2, 10)[1:]
         track = levinson_2(yr, samples_ammount, 10)
         if segment_id == 1:
-            y = np.concatenate((np.zeros(ar_rank), y), axis=0)
+            y = np.concatenate((np.zeros(ar_rank), y))
         else:
-            y = np.concatenate((input_arr[t[0]-ar_rank:t[0]], y), axis=0)
+            y = np.concatenate((input_arr[t[0]-ar_rank:t[0]], y))
 
         for i in range(samples_ammount):
             e[i] = y[i+ar_rank] + np.sum(y[i:i+ar_rank][::-1] * track)
@@ -57,19 +59,17 @@ def nad(samples_ammount, ar_rank):
 
 def odb(a, e_max, e):
     samples_ammount = 256
-    r = 10
+    ar_rank = 10
     segment_n = len(e_max)
-    y_o = np.zeros(r + segment_n*samples_ammount + 1)
+    y_o = np.zeros(ar_rank + segment_n*samples_ammount + 1)
 
     for i in range(segment_n):
-        p_s = r + i * samples_ammount
+        p_s = ar_rank + i * samples_ammount
         y_s = np.zeros(samples_ammount)
-        a_s = a[i*r:(i+1)*r]
+        a_s = a[i*ar_rank:(i+1)*ar_rank]
         for j in range(samples_ammount):
             p_s2 = p_s + j
-            # p1 = y_o[p_s2-r:p_s2][::-1]
-            # p2 = e[i * samples_ammount + j]
-            y_s[j] = -np.sum(y_o[p_s2-r:p_s2][::-1] * a_s) + e[i * samples_ammount + j]
+            y_s[j] = -np.sum(y_o[p_s2-ar_rank:p_s2][::-1] * a_s) + e[i * samples_ammount + j]
         y_o[p_s:p_s+samples_ammount] = y_s
 
     write('wiersz_reconstructed_1b.wav', rate=11025, data=y_o)
@@ -78,7 +78,7 @@ def odb(a, e_max, e):
 
 
 if __name__ == '__main__':
-    bits = 8
+    bits = 16
     samples_ammount = 256
     ar_rank = 10
     inp, a, e_max, e = nad(samples_ammount, ar_rank)
