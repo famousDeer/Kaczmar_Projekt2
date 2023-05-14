@@ -2,3 +2,4 @@
 __pycache__/
 Levinson_Durbin/__pycache__/
 data/
+.ipynb_checkpoints/
