@@ -1,9 +1,9 @@
 import numpy as np
 
-def levinson_2(seg, N, ar_rank):
+def levinson_2(seg, samples_ammount, ar_rank):
     p = np.zeros(ar_rank+1)
     for i in range(ar_rank+1):
-        for t in range(i, N):
+        for t in range(i, samples_ammount):
             p[i] = p[i] + seg[t] * seg[t-i]
     a = np.zeros((ar_rank, ar_rank))
     s = np.zeros(11)

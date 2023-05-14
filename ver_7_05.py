@@ -67,8 +67,8 @@ def odb(a, e_max, e):
         a_s = a[i*r:(i+1)*r]
         for j in range(samples_ammount):
             p_s2 = p_s + j
-            p1 = y_o[p_s2-r:p_s2][::-1]
-            p2 = e[i * samples_ammount + j]
+            # p1 = y_o[p_s2-r:p_s2][::-1]
+            # p2 = e[i * samples_ammount + j]
             y_s[j] = -np.sum(y_o[p_s2-r:p_s2][::-1] * a_s) + e[i * samples_ammount + j]
         y_o[p_s:p_s+samples_ammount] = y_s
 
@@ -79,9 +79,9 @@ def odb(a, e_max, e):
 
 if __name__ == '__main__':
     bits = 8
-    sample_ammount = 256
+    samples_ammount = 256
     ar_rank = 10
-    inp, a, e_max, e = nad(sample_ammount, ar_rank)
+    inp, a, e_max, e = nad(samples_ammount, ar_rank)
 
     # zapisz e_max
     bits_e_max=16
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     # zapisz błędy
     err_s = ""
     for i in range(len(e_max)):
-        err_s += koduj(e[i*sample_ammount:(i+1)*sample_ammount], lb=bits, e_max=e_max[i])
+        err_s += koduj(e[i*samples_ammount:(i+1)*samples_ammount], lb=bits, e_max=e_max[i])
     zapisz_plik(err_s, 'errors_'+str(bits)+'.bin')
 
     # czytaj e_max
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     errors = np.array([])
     add = 0
     for i in range(len(errors_max)):
-        errors = np.append(errors, dekoduj(err_sr[i*sample_ammount*bits+add:(i+1)*sample_ammount*bits+add+16], lb=bits, l=sample_ammount, e_max=errors_max[i]))
+        errors = np.append(errors, dekoduj(err_sr[i*samples_ammount*bits+add:(i+1)*samples_ammount*bits+add+16], lb=bits, l=samples_ammount, e_max=errors_max[i]))
         add += 16
 
 
